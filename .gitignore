@@ -1,0 +1,23 @@
+.ruby-gemset
+.ruby-version
+
+.bundle
+.DS_Store
+Gemfile.lock
+*.gem
+
+# docs
+rdoc
+doc
+.yardoc
+
+# textmate
+*.tmproj
+
+# vim
+*.swp
+
+# rcov generated
+coverage
+
+test_env.sh
