@@ -3,7 +3,9 @@ librato-logreporter
 
 [![Build Status](https://secure.travis-ci.org/librato/librato-logreporter.png?branch=master)](http://travis-ci.org/librato/librato-logreporter) [![Code Climate](https://codeclimate.com/github/librato/librato-logreporter.png)](https://codeclimate.com/github/librato/librato-logreporter)
 
-`librato-rack` provides rack middleware which will report key statistics for your rack applications to [Librato Metrics](https://metrics.librato.com/). It will also allow you to easily track your own custom metrics. Metrics are delivered asynchronously behind the scenes so they won't affect performance of your requests.
+`librato-logreporter` provides an easy interface to write metrics for [Librato Metrics](https://metrics.librato.com/) to your logs or another IO stream. It is fully format-compliant with [l2met](https://github.com/ryandotsmith/l2met). If you are running on Heroku it will allow you to easily insert metrics which can be retrieved via a [log drain](https://devcenter.heroku.com/articles/logging#syslog-drains).
+
+This library is ideally suited for custom or short-lived processes where the overhead of in-process collection will be costly and external metric collectors are unavailable. If you are considering using `librato-logreporter` for a rails or rack-based web app, first explore [librato-rails](https://github.com/librato/librato-rails) and/or [librato-rack](https://github.com/librato/librato-rack). In most cases one of these libraries will be a better solution for your web applications.
 
 Currently Ruby 1.9.2+ is required.
 
@@ -11,20 +13,20 @@ Currently Ruby 1.9.2+ is required.
 
 Install `librato-logreporter` in your application:
 
-    use Librato::Rack
+    require 'librato/logreporter'
 
-Configuring and relaunching your application will start the reporting of performance and request metrics. You can also track custom metrics by adding simple one-liners to your code:
+You can now track custom metrics by adding simple one-liners to your code:
 
     # keep counts of key events
-    Librato.increment 'user.signup'
+    Librato.increment 'jobs.worked'
 
-    # benchmark sections of code to verify production performance
+    # benchmark sections of code to verify performance
     Librato.timing 'my.complicated.work' do
       # do work
     end
 
-    # track averages across requests
-    Librato.measure 'user.social_graph.nodes', user.social_graph.size
+    # track averages across processes/jobs/requests
+    Librato.measure 'payload.size', payload.length_in_bytes
 
 ## Installation & Configuration
 
@@ -40,24 +42,28 @@ Then require it:
 
     require 'librato-reporter'
 
-If you don't have a Metrics account already, [sign up](https://metrics.librato.com/). In order to send measurements to Metrics you need to provide your account credentials to `librato-reporter`.
+If you don't have a [Librato Metrics](https://metrics.librato.com/) account already, [sign up](https://metrics.librato.com/). In order to send measurements to Librato you need to provide your account credentials to `librato-reporter`.
 
 ##### Use environment variables
 
 By default you can use `LIBRATO_USER` and `LIBRATO_TOKEN` to pass your account data to the middleware. While these are the only required variables, there are a few more optional environment variables you may find useful.
 
-* `LIBRATO_SOURCE` - the default source to use for submitted metrics. If this is not set, hostname of the executing machine will be the default source
+* `LIBRATO_SOURCE` - the default source to use for submitted metrics. If not set your metrics will be submitted without a source.
 * `LIBRATO_PREFIX` - a prefix which will be appended to all metric names
 
 ##### Running on Heroku
 
-If you are using the [Librato Metrics Heroku addon](https://addons.heroku.com/librato), your `LIBRATO_USER` and `LIBRATO_TOKEN` environment variables will already be set in your Heroku environment. If you are running without the addon you will need to provide them yourself.
+If you are using the [Librato Metrics Heroku addon](https://addons.heroku.com/librato), your `LIBRATO_USER` and `LIBRATO_TOKEN` environment variables will already be set in your Heroku environment. You can confirm this with:
 
-You must also specify a custom source for your app to track properly. You can set the source in your environment:
+    heroku config
+
+If you are running without the addon you will need to provide them yourself.
+
+You should also specify a custom source for your app to track properly. You can set the source in your environment:
 
     heroku config:add LIBRATO_SOURCE=myappname
 
-NOTE: if Heroku idles your application no measurements will be sent until it receives another request and is restarted. If you see intermittent gaps in your measurements during periods of low traffic this is the most likely cause.
+NOTE: if Heroku idles your process no measurements will be sent until it receives a request and is restarted. If you see intermittent gaps in your measurements during periods of low traffic this is the most likely cause.
 
 ## Custom Measurements
 
@@ -67,8 +73,8 @@ Tracking anything that interests you is easy with Librato. There are four primar
 
 Use for tracking a running total of something _across_ requests, examples:
 
-    # increment the 'sales_completed' metric by one
-    Librato.increment 'sales.completed'
+    # increment the 'jobs.completed' metric by one
+    Librato.increment 'jobs.completed'
 
     # increment by five
     Librato.increment 'items.purchased', :by => 5
@@ -80,25 +86,20 @@ Other things you might track this way: user signups, requests of a certain type 
 
 ###### Sporadic Increment Reporting
 
-Note that `increment` is primarily used for tracking the rate of occurrence of some event. Given this increment metrics are _continuous by default_: after being called on a metric once they will report on every interval, reporting zeros for any interval when increment was not called on the metric.
-
-Especially with custom sources you may want the opposite behavior - reporting a measurement only during intervals where `increment` was called on the metric:
-
-    # report a value for 'user.uploaded_file' only during non-zero intervals
-    Librato.increment 'user.uploaded_file', :source => user.id, :sporadic => true
+TODO: Document this behavior
 
 #### measure
 
-Use when you want to track an average value _per_-request. Examples:
+Use when you want to track an average value _per_-measurement period. Examples:
 
-    Librato.measure 'user.social_graph.nodes', 212
+    Librato.measure 'payload.size', 212
 
     # report from a custom source
-    Librato.measure 'jobs.queued', 3, :source => 'worker.12'
+    Librato.measure 'jobs.by.user', 3, :source => job.requestor.id
 
 #### timing
 
-Like `Librato.measure` this is per-request, but specialized for timing information:
+Like `Librato.measure` this is per-period, but specialized for timing information:
 
     Librato.timing 'twitter.lookup.time', 21.2
 
