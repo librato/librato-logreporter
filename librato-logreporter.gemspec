@@ -10,8 +10,8 @@ Gem::Specification.new do |s|
   s.email       = ["matt@librato.com"]
   s.homepage    = "https://github.com/librato/librato-logreporter"
 
-  s.summary     = "Write Librato Metrics to your logs with a convenient interface"
-  s.description = "Provides a simple interface to log Librato Metrics to your log files in l2met format."
+  s.summary     = "Write Librato metrics to your logs with a convenient interface"
+  s.description = "Provides a simple interface to log Librato metrics to your log files in l2met format."
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["LICENSE", "Rakefile", "README.md"]
   s.test_files = Dir["test/**/*"]
