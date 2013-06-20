@@ -12,13 +12,23 @@ module Librato
 
     def test_increment
       @reporter.increment :foo
-      assert_equal 'measure.foo=1', last_logged
+      assert_last_logged 'measure.foo=1'
 
       @reporter.increment 'foo.bar', :by => 2
-      assert_equal 'measure.foo.bar=2', last_logged
+      assert_last_logged 'measure.foo.bar=2'
+    end
+
+    def test_increment_supports_source
+      @reporter.source = 'sf'
+      @reporter.increment 'days.foggy'
+      assert_last_logged 'measure.days.foggy=1 source=sf'
     end
 
     private
+
+    def assert_last_logged(string)
+      assert_equal string, last_logged, "Last logged should be '#{string}'."
+    end
 
     def last_logged
       @buffer.rewind

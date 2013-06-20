@@ -36,10 +36,17 @@ module Librato
 
     private
 
+    def add_source(chunks)
+      if source
+        chunks << "source=#{source}"
+      end
+      chunks
+    end
+
     def log_write(args)
       paired = args.map{ |keyval| keyval.join('=') }
       paired.map!{ |element| "measure.#{element}" }
-      log.puts paired.join(' ')
+      log.puts add_source(paired).join(' ')
     end
 
   end
