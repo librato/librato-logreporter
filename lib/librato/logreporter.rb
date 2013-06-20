@@ -85,14 +85,14 @@ module Librato
 
     # take key/value pairs and return an array of measure strings
     def add_prefixes(measures)
-      prefix = 'measure.'
+      measure_prefix = 'measure.'
+      measure_prefix << "#{prefix}." if prefix
       measures.map { |keyval|
-        key = keyval[0].to_sym
         joined = keyval.join('=')
-        if key == :source
+        if keyval[0].to_sym == :source
           joined
         else
-          prefix + joined
+          measure_prefix + joined
         end
       }
     end

@@ -69,6 +69,24 @@ module Librato
       assert_equal 'measure.pages.public.views=2', lines[2].chomp
     end
 
+    def test_custom_prefix
+      @reporter.prefix = 'librato'
+
+      # increment
+      @reporter.increment 'views'
+      assert_last_logged 'measure.librato.views=1'
+
+      # measure/timing
+      @reporter.measure 'sql.queries', 6
+      assert_last_logged 'measure.librato.sql.queries=6'
+
+      # group
+      @reporter.group :private do |priv|
+        priv.increment 'secret'
+      end
+      assert_last_logged 'measure.librato.private.secret=1'
+    end
+
     private
 
     def assert_last_logged(string)
