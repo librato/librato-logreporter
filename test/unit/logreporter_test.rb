@@ -54,6 +54,21 @@ module Librato
       assert last_logged.index('source=worker'), 'should use custom source'
     end
 
+    def test_basic_grouping
+      @reporter.group :pages do |p|
+        p.increment :total
+        p.timing :render_time, 63
+        # nested
+        p.group('public') { |pub| pub.increment 'views', :by => 2 }
+      end
+
+      @buffer.rewind
+      lines = @buffer.readlines
+      assert_equal 'measure.pages.total=1', lines[0].chomp
+      assert_equal 'measure.pages.render_time=63', lines[1].chomp
+      assert_equal 'measure.pages.public.views=2', lines[2].chomp
+    end
+
     private
 
     def assert_last_logged(string)

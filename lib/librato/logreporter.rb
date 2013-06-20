@@ -11,6 +11,20 @@ module Librato
   class LogReporter
     include Configuration
 
+    # Group a set of metrics by common prefix
+    #
+    # @example
+    #   # write a 'performance.hits' increment and
+    #   # a 'performance.response.time' measure
+    #   group(:performance) do |perf|
+    #     perf.increment :hits
+    #     perf.measure 'response.time', response_time
+    #   end
+    #
+    def group(prefix)
+      yield Group.new(collector: self, prefix: prefix)
+    end
+
     # Increment a given metric
     #
     # @example Increment metric 'foo' by 1
