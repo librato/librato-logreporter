@@ -3,6 +3,12 @@ require_relative 'logreporter/group'
 require_relative 'logreporter/version'
 
 module Librato
+  extend SingleForwardable
+  def_delegators :log_reporter, :increment, :measure, :timing, :group
+
+  def self.log_reporter
+    @log_reporter ||= LogReporter.new
+  end
 
   # Provides a common interface to reporting metrics with methods
   # like #increment, #measure, #timing, #group - all written
