@@ -20,8 +20,14 @@ module Librato
 
     def test_increment_supports_source
       @reporter.source = 'sf'
+
+      # default source
       @reporter.increment 'days.foggy'
       assert_last_logged 'measure.days.foggy=1 source=sf'
+
+      # custom source
+      @reporter.increment 'days.foggy', :source => 'seattle'
+      assert_last_logged 'measure.days.foggy=1 source=seattle'
     end
 
     private
