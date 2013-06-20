@@ -1,5 +1,14 @@
+require 'librato/logreporter/configuration'
+require 'librato/logreporter/version'
+
 module Librato
+
+  # Provides a common interface to reporting metrics with methods
+  # like #increment, #measure, #timing, #group - all written
+  # to your preferred IO stream.
+  #
   class LogReporter
+    include Configuration
 
     # Increment a given metric
     #
@@ -15,16 +24,6 @@ module Librato
     def increment(counter, options={})
       by = options[:by] || 1
       log_write(counter => by, :source => options[:source])
-    end
-
-    # current IO to log to
-    def log
-      @log ||= $stdout
-    end
-
-    # set IO to log to
-    def log=(io)
-      @log = io
     end
 
     # @example Simple measurement
@@ -67,16 +66,6 @@ module Librato
     end
     alias :timing :measure
 
-    # current default source
-    def source
-      @source ||= ENV['LIBRATO_SOURCE']
-    end
-
-    # set default source
-    def source=(source)
-      @source = source
-    end
-
     private
 
     # take key/value pairs and return an array of measure strings
@@ -111,5 +100,3 @@ module Librato
 
   end
 end
-
-require 'librato/logreporter/version'
