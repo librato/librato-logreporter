@@ -16,6 +16,16 @@ module Librato
         @log = io
       end
 
+      # current prefix
+      def prefix
+        @prefix ||= ENV['LIBRATO_PREFIX']
+      end
+
+      # set prefix
+      def prefix=(prefix)
+        @prefix = prefix
+      end
+
       # current default source
       def source
         @source ||= ENV['LIBRATO_SOURCE']
