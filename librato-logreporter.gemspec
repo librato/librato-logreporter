@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.summary     = "Write Librato metrics to your logs with a convenient interface"
   s.description = "Provides a simple interface to log Librato metrics to your log files in l2met format."
 
-  s.files = Dir["{app,config,db,lib}/**/*"] + ["LICENSE", "Rakefile", "README.md"]
+  s.files = Dir["{app,config,db,lib}/**/*"] + ["LICENSE", "Rakefile", "README.md", "CHANGELOG.md"]
   s.test_files = Dir["test/**/*"]
 
   s.add_development_dependency "minitest"
