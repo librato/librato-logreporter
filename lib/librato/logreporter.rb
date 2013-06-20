@@ -1,5 +1,6 @@
-require 'librato/logreporter/configuration'
-require 'librato/logreporter/version'
+require_relative 'logreporter/configuration'
+require_relative 'logreporter/group'
+require_relative 'logreporter/version'
 
 module Librato
 
