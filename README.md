@@ -5,9 +5,11 @@ librato-logreporter
 
 NOTE: This library is in active development and is suggested for early-adopter use only.
 
-`librato-logreporter` provides an easy interface to write metrics for [Librato Metrics](https://metrics.librato.com/) to your logs or another IO stream. It is fully format-compliant with [l2met](https://github.com/ryandotsmith/l2met). If you are running on Heroku it will allow you to easily insert metrics which can be retrieved via a [log drain](https://devcenter.heroku.com/articles/logging#syslog-drains).
+`librato-logreporter` provides an easy interface to write metrics ultimately bound for [Librato Metrics](https://metrics.librato.com/) to your logs or another IO stream. It is fully format-compliant with [l2met](https://github.com/ryandotsmith/l2met). If you are running on Heroku it will allow you to easily insert metrics which can be retrieved via a [log drain](https://devcenter.heroku.com/articles/logging#syslog-drains).
 
-This library is ideally suited for custom or short-lived processes where the overhead of in-process collection will be costly and external metric collectors are unavailable. If you are considering using `librato-logreporter` for a rails or rack-based web app, first explore [librato-rails](https://github.com/librato/librato-rails) and/or [librato-rack](https://github.com/librato/librato-rack). In most cases one of these libraries will be a better solution for your web applications.
+This library is ideally suited for custom or short-lived processes where the overhead of in-process collection will be costly and external metric collectors are unavailable.
+
+If you are considering using `librato-logreporter` for a rails or rack-based web app, first explore [librato-rails](https://github.com/librato/librato-rails) and/or [librato-rack](https://github.com/librato/librato-rack). In most cases one of these libraries will be a better solution for your web applications.
 
 Currently Ruby 1.9.2+ is required.
 
@@ -44,28 +46,26 @@ Then require it:
 
     require 'librato-reporter'
 
-If you don't have a [Librato Metrics](https://metrics.librato.com/) account already, [sign up](https://metrics.librato.com/). In order to send measurements to Librato you need to provide your account credentials to `librato-reporter`.
+If you don't have a [Librato Metrics](https://metrics.librato.com/) account already, [sign up](https://metrics.librato.com/). In order to send measurements to Librato you will need to provide your account credentials to the processor for output from `librato-reporter`.
 
-##### Use environment variables
+##### Environment variables
 
-By default you can use `LIBRATO_USER` and `LIBRATO_TOKEN` to pass your account data to the middleware. While these are the only required variables, there are a few more optional environment variables you may find useful.
+There are a few optional environment variables you may find useful:
 
 * `LIBRATO_SOURCE` - the default source to use for submitted metrics. If not set your metrics will be submitted without a source.
 * `LIBRATO_PREFIX` - a prefix which will be appended to all metric names
 
 ##### Running on Heroku
 
-If you are using the [Librato Metrics Heroku addon](https://addons.heroku.com/librato), your `LIBRATO_USER` and `LIBRATO_TOKEN` environment variables will already be set in your Heroku environment. You can confirm this with:
-
-    heroku config
-
-If you are running without the addon you will need to provide them yourself.
-
-You should also specify a custom source for your app to track properly. You can set the source in your environment:
+You should specify a custom source for your app to track properly. You can set the source in your environment:
 
     heroku config:add LIBRATO_SOURCE=myappname
 
 NOTE: if Heroku idles your process no measurements will be sent until it receives a request and is restarted. If you see intermittent gaps in your measurements during periods of low traffic this is the most likely cause.
+
+##### Harvesting your metrics from your logs
+
+There are few options for this which we will document further going forward. For the moment, [come ask us about it](http://chat.librato.com/).
 
 ## Custom Measurements
 
@@ -73,7 +73,7 @@ Tracking anything that interests you is easy with Librato. There are four primar
 
 #### increment
 
-Use for tracking a running total of something _across_ requests, examples:
+Use for tracking a running total of something _across_ jobs or requests, examples:
 
     # increment the 'jobs.completed' metric by one
     Librato.increment 'jobs.completed'
@@ -84,11 +84,7 @@ Use for tracking a running total of something _across_ requests, examples:
     # increment with a custom source
     Librato.increment 'user.purchases', :source => user.id
 
-Other things you might track this way: user signups, requests of a certain type or to a certain route, total jobs queued or processed, emails sent or received
-
-###### Sporadic Increment Reporting
-
-TODO: Document this behavior
+Other things you might track this way: user activity, requests of a certain type or to a certain route, total jobs queued or processed, emails sent or received
 
 #### measure
 
