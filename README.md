@@ -53,7 +53,7 @@ If you don't have a [Librato Metrics](https://metrics.librato.com/) account alre
 There are a few optional environment variables you may find useful:
 
 * `LIBRATO_SOURCE` - the default source to use for submitted metrics. If not set your metrics will be submitted without a source.
-* `LIBRATO_PREFIX` - a prefix which will be appended to all metric names
+* `LIBRATO_PREFIX` - a prefix which will be prepended to all metric names
 
 ##### Running on Heroku
 
