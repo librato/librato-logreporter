@@ -64,9 +64,9 @@ module Librato
 
       @buffer.rewind
       lines = @buffer.readlines
-      assert_equal 'measure#pages.total=1', lines[0].chomp
+      assert_equal 'count#pages.total=1', lines[0].chomp
       assert_equal 'measure#pages.render_time=63', lines[1].chomp
-      assert_equal 'measure#pages.public.views=2', lines[2].chomp
+      assert_equal 'count#pages.public.views=2', lines[2].chomp
     end
 
     def test_custom_prefix
@@ -74,7 +74,7 @@ module Librato
 
       # increment
       @reporter.increment 'views'
-      assert_last_logged 'measure#librato.views=1'
+      assert_last_logged 'count#librato.views=1'
 
       # measure/timing
       @reporter.measure 'sql.queries', 6
@@ -84,7 +84,7 @@ module Librato
       @reporter.group :private do |priv|
         priv.increment 'secret'
       end
-      assert_last_logged 'measure#librato.private.secret=1'
+      assert_last_logged 'count#librato.private.secret=1'
     end
 
     private
