@@ -7,6 +7,8 @@ NOTE: This library is in active development and is suggested for early-adopter u
 
 `librato-logreporter` provides an easy interface to write metrics ultimately bound for [Librato Metrics](https://metrics.librato.com/) to your logs or another IO stream. It is fully format-compliant with [l2met](https://github.com/ryandotsmith/l2met). If you are running on Heroku it will allow you to easily insert metrics which can be retrieved via a [log drain](https://devcenter.heroku.com/articles/logging#syslog-drains).
 
+NOTE: Current versions of this library use the [logging conventions](https://github.com/ryandotsmith/l2met/wiki/Usage) established in l2met 2.0 and greater. For use with [older versions](https://github.com/ryandotsmith/l2met/wiki/Usage) of l2met, use v0.1 of this gem.
+
 This library is ideally suited for custom or short-lived processes where the overhead of in-process collection will be costly and external metric collectors are unavailable.
 
 If you are considering using `librato-logreporter` for a rails or rack-based web app, first explore [librato-rails](https://github.com/librato/librato-rails) and/or [librato-rack](https://github.com/librato/librato-rack). In most cases one of these libraries will be a better solution for your web applications.
