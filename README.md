@@ -1,7 +1,7 @@
 librato-logreporter
 =======
 
-[![Build Status](https://secure.travis-ci.org/librato/librato-logreporter.png?branch=master)](http://travis-ci.org/librato/librato-logreporter) [![Code Climate](https://codeclimate.com/github/librato/librato-logreporter.png)](https://codeclimate.com/github/librato/librato-logreporter)
+[![Gem Version](https://badge.fury.io/rb/librato-logreporter.png)](http://badge.fury.io/rb/librato-logreporter) [![Build Status](https://secure.travis-ci.org/librato/librato-logreporter.png?branch=master)](http://travis-ci.org/librato/librato-logreporter) [![Code Climate](https://codeclimate.com/github/librato/librato-logreporter.png)](https://codeclimate.com/github/librato/librato-logreporter)
 
 NOTE: This library is in active development and is suggested for early-adopter use only.
 
