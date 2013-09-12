@@ -44,7 +44,7 @@ module Librato
     #
     def increment(counter, options={})
       by = options[:by] || 1
-      log_write(counter => by, :source => options[:source])
+      log_write(counter => by, :l2met_type => 'count', :source => options[:source])
     end
 
     # @example Simple measurement
@@ -91,7 +91,8 @@ module Librato
 
     # take key/value pairs and return an array of measure strings
     def add_prefixes(measures)
-      measure_prefix = 'measure.'
+      type = measures.delete(:l2met_type) || 'measure'
+      measure_prefix = type << '#'
       measure_prefix << "#{prefix}." if prefix
       measures.map { |keyval|
         joined = keyval.join('=')
@@ -114,8 +115,8 @@ module Librato
       measures
     end
 
-    def log_write(measures)
-      measure_chunks = add_prefixes(manage_source(measures))
+    def log_write(data)
+      measure_chunks = add_prefixes(manage_source(data))
       log.puts measure_chunks.join(' ')
     end
 
