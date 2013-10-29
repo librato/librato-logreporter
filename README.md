@@ -1,11 +1,11 @@
 librato-logreporter
 =======
 
-[![Build Status](https://secure.travis-ci.org/librato/librato-logreporter.png?branch=master)](http://travis-ci.org/librato/librato-logreporter) [![Code Climate](https://codeclimate.com/github/librato/librato-logreporter.png)](https://codeclimate.com/github/librato/librato-logreporter)
-
-NOTE: This library is in active development and is suggested for early-adopter use only.
+[![Gem Version](https://badge.fury.io/rb/librato-logreporter.png)](http://badge.fury.io/rb/librato-logreporter) [![Build Status](https://secure.travis-ci.org/librato/librato-logreporter.png?branch=master)](http://travis-ci.org/librato/librato-logreporter) [![Code Climate](https://codeclimate.com/github/librato/librato-logreporter.png)](https://codeclimate.com/github/librato/librato-logreporter)
 
 `librato-logreporter` provides an easy interface to write metrics ultimately bound for [Librato Metrics](https://metrics.librato.com/) to your logs or another IO stream. It is fully format-compliant with [l2met](https://github.com/ryandotsmith/l2met). If you are running on Heroku it will allow you to easily insert metrics which can be retrieved via a [log drain](https://devcenter.heroku.com/articles/logging#syslog-drains).
+
+NOTE: Current versions of this library use the [logging conventions](https://github.com/ryandotsmith/l2met/wiki/Usage) established in l2met 2.0 and greater. For use with [older versions](https://github.com/ryandotsmith/l2met/wiki/Usage) of l2met, use v0.1 of this gem.
 
 This library is ideally suited for custom or short-lived processes where the overhead of in-process collection will be costly and external metric collectors are unavailable.
 
@@ -53,7 +53,7 @@ If you don't have a [Librato Metrics](https://metrics.librato.com/) account alre
 There are a few optional environment variables you may find useful:
 
 * `LIBRATO_SOURCE` - the default source to use for submitted metrics. If not set your metrics will be submitted without a source.
-* `LIBRATO_PREFIX` - a prefix which will be appended to all metric names
+* `LIBRATO_PREFIX` - a prefix which will be prepended to all metric names
 
 ##### Running on Heroku
 
