@@ -5,6 +5,7 @@ require "librato/logreporter/version"
 Gem::Specification.new do |s|
   s.name        = "librato-logreporter"
   s.version     = Librato::LogReporter::VERSION
+  s.license     = 'BSD 3-clause'
 
   s.authors     = ["Matt Sanders"]
   s.email       = ["matt@librato.com"]
