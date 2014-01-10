@@ -63,6 +63,12 @@ You should specify a custom source for your app to track properly. You can set t
 
 NOTE: if Heroku idles your process no measurements will be sent until it receives a request and is restarted. If you see intermittent gaps in your measurements during periods of low traffic this is the most likely cause.
 
+##### Silencing Output
+
+If you would like to turn off logging to StdOut, for example, in your local environment, you can add the following after `require 'librato-reporter'` to send output to /dev/null:
+
+    Librato.log_reporter.log = File.open(File::NULL, "w")
+
 ##### Harvesting your metrics from your logs
 
 There are few options for this which we will document further going forward. For the moment, [come ask us about it](http://chat.librato.com/).
